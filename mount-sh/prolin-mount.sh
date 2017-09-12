@@ -2,6 +2,6 @@
 
 #gvfs-mount ftp://prolin@120.116.24.1
 
-#gvfs-mount smb://prolin\;workgroupname@120.116.24.1/porlin
+#gvfs-mount smb://prolin\;workgroupname@120.116.24.1/porlin  ,sec=lanman
 echo "prolin web :"
-sudo mount   //120.116.24.1/prolin ~/mount-path/prolin-web  -o file_mode=0777,dir_mode=0777,uid=1000,username=prolin,iocharset=utf8,sec=lanman
+sudo mount   //120.116.24.1/prolin ~/mount-path/prolin-web  -o file_mode=0777,dir_mode=0777,uid=1000,username=prolin,iocharset=utf8
