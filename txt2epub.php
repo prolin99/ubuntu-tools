@@ -50,10 +50,10 @@ function checkUTF8($str) {
           $value = ord($str[$i]);
           if($value > 127) {
               if($value >= 192 && $value <= 247) return "UTF-8";
-              else return (0);//.die('Not a UTF-8 compatible string');
+              else return ('BIG5');//.die('Not a UTF-8 compatible string');
           }
       }
-      return (0);
+      return ('BIG5');
 }
 
 
@@ -68,17 +68,14 @@ $txt_path = $argv[2] . "/OEBPS/Text/" ;
 //讀入資料
 $lines = file_get_contents( $txt_file );
 
-
+//$code = mb_detect_encoding( $lines, 'UTF-8', true);
 $code= checkUTF8( $lines) ;
-//  echo '===========' . $code ;
 
-if  ($code===0 )
-    //$code ="BIG5" ;
-    $code="GB" ;
-//  echo '===========' . $code ;
+//echo '===========' . $code ;
 
-if    ($code<>  "UTF-8" )
-     $lines =  iconv($code, "UTF-8", $lines) ;
+if ($code<>  "UTF-8" )
+     $lines=  mb_convert_encoding( $lines,   "UTF-8" , $code) ;
+     //$lines =  iconv($code, "UTF-8", $lines) ;
 
      $lines = preg_replace("/　/","",$lines) ;
      $lines2 =   preg_split('/\n/' ,$lines) ;
