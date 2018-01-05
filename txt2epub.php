@@ -1,5 +1,6 @@
 #!/usr/bin/php -q
 <?php
+
 //<meta charset=utf-8">
 
 
@@ -35,6 +36,7 @@ $html_end='          </div><!--End content-->
  * 判斷檔案是不是 utf8?>
 return 0=不是 utf8,1=是utf8
 */
+
 function checkUTF8($str)
 {
     // $str=file_get_contents($suc_file);
@@ -71,7 +73,7 @@ function checkUTF8($str)
 //取得檔案參數   txt 、 path
 $txt_file = $argv[1] ;
 $txt_path = $argv[2] . "/OEBPS/Text/" ;
-
+$code_set =  $argv[3] ;
 //讀入資料
 $lines = file_get_contents($txt_file);
 //$encode = mb_detect_encoding($lines, array('ASCII','GB2312′,'GBK’,'BIG5','UTF-8');
@@ -82,15 +84,23 @@ $code= checkUTF8($lines) ;  //是否 UTF-8 UTF-16LE UTF-16BE
 
 if ($code <>  "UTF-8") {
   if ($code ==='XXX'){
-    //再檢查是否 BIG-5  GBK
-    $code = mb_detect_encoding( $lines, array('ASCII' ,'BIG-5' ,'GBK'  ) );
+    //再檢查是否 BIG-5  GBK  但這部份不太準，
+    $code = mb_detect_encoding( $lines, array('ASCII' ,'BIG-5' ,'EUC-CN' , 'GBK'   ) );
+
     echo "***  $code *** " ;
   }
 
   //轉成 UTF-8
-  $lines=  mb_convert_encoding($lines, "UTF-8", $code) ;
+  if ($code_set)
+    $lines=  mb_convert_encoding($lines, "UTF-8", $code_set ) ;
+  else
+    $lines=  mb_convert_encoding($lines, "UTF-8", $code ) ;
+
+
 }
+//echo $lines ;
 echo "======  $code" ;
+
 
 $lines = preg_replace("/　/", "", $lines) ;
 $lines2 =   preg_split('/\n/', $lines) ;
