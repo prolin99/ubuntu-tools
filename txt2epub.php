@@ -79,25 +79,26 @@ $lines = file_get_contents($txt_file);
 //$encode = mb_detect_encoding($lines, array('ASCII','GB2312′,'GBK’,'BIG5','UTF-8');
 
 
+$lines_list =   preg_split('/\n/', $lines) ;
 
-$code= checkUTF8($lines) ;  //是否 UTF-8 UTF-16LE UTF-16BE
+foreach ($lines_list as $k => $v) {
+  if (trim($v)<>'') {
+    echo '------'   .trim($v)  ;
+    $code= checkUTF8($v) ;  //是否 UTF-8 UTF-16LE UTF-16BE
 
-if ($code <>  "UTF-8") {
-  if ($code ==='XXX'){
-    //再檢查是否 BIG-5  GBK  但這部份不太準，
-    $code = mb_detect_encoding( $lines, array('ASCII' ,'BIG-5' ,'EUC-CN' , 'GBK'   ) );
+    if ($code <>  "UTF-8") {
+      if ($code ==='XXX'){
+        //再檢查是否 BIG-5  GBK  
+        $code = mb_detect_encoding( $v, array('ASCII' ,'BIG-5' ,'EUC-CN' , 'GBK'   ) );
 
-    echo "***  $code *** " ;
-  }
-
-  //轉成 UTF-8
-  if ($code_set)
-    $lines=  mb_convert_encoding($lines, "UTF-8", $code_set ) ;
-  else
-    $lines=  mb_convert_encoding($lines, "UTF-8", $code ) ;
-
-
+        echo "***  $code *** " ;
+      }
+    }
+  } else
+    break ;
 }
+
+$lines=  mb_convert_encoding($lines, "UTF-8", $code ) ;
 //echo $lines ;
 echo "======  $code" ;
 
