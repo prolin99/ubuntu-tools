@@ -88,7 +88,7 @@ foreach ($lines_list as $k => $v) {
 
     if ($code <>  "UTF-8") {
       if ($code ==='XXX'){
-        //再檢查是否 BIG-5  GBK  
+        //再檢查是否 BIG-5  GBK
         $code = mb_detect_encoding( $v, array('ASCII' ,'BIG-5' ,'EUC-CN' , 'GBK'   ) );
 
         echo "***  $code *** " ;
@@ -109,6 +109,18 @@ $lines2 =   preg_split('/\n/', $lines) ;
 $col =0 ;
 $chap=101 ;
 $chap_ord =1 ;
+
+//加入首頁功能，放入章節檔
+$toc_data = "
+ <navPoint id='navPoint-" .$chap_ord ."' playOrder='$chap_ord'>
+   <navLabel>
+     <text>首頁</text>
+   </navLabel>
+   <content src='Text/ch101.html'/>
+ </navPoint>" ;
+
+$chap_ord++ ;
+
 foreach ($lines2 as $k => $v) {
      $v = trim(preg_replace("/　/", "", $v)) ;
 
