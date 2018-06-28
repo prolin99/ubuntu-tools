@@ -31,7 +31,7 @@ if len(sys.argv)>2:
 for i in os.listdir(path):
     if i.endswith((".png",".jpg","jpeg")):
         flist.append( path + '/' +  i)
-        print('..' )
+        print('.' , end='' )
 flist.sort()
 #print(flist)
 
