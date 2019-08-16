@@ -1,0 +1,65 @@
+#!/bin/bash
+#檔案名 簡轉繁 (包含以下目錄)
+#    * 需安裝套件 ： nautilus-script-manager
+#    * 把檔案放在： $HOME/.gnome2/nautilus-scripts ，檔名例如為：簡轉繁，並加入執行權限。
+#    * 在檔案瀏覽器中，選擇檔案按滑鼠右鍵會出現 -- 指令稿-->簡轉繁 
+#
+function ren() {
+	for fn in $*
+	do
+        	#取得最後檔名部份
+        	base_name=${fn##*/}
+        	#取得路徑
+        	n_path=${fn%/*}
+ 
+		old=$base_name
+		#取得字串長度
+		old_len=${#old}
+		#簡體檔名轉換成繁體檔名
+		new=`echo $old |~/tools/chinese-conv.php `  
+ 
+ 		mytype=`file --mime-encoding -b "${old}"`
+                mytype=`echo $mytype |cut -c 1-3`
+ 		if [ $mytype != utf ]
+ 		then
+ 		  	#cat  $n_path/$old  | iconv -f GB2312  -t UTF-8  > $n_path/$new.utf8 
+ 		  #	iconv  -f GB2312  -t UTF-8 -c "`echo ${old}`" > "${old}.utf8"
+ 		  cat  $n_path/$old  | ~/tools/g2u.php      > $n_path/$old.utf8 
+ 			rm -f $n_path/$old
+ 			mv $n_path/$old.utf8    $n_path/$old
+ 		fi
+ 		
+ 		cat  $n_path/$old  | ~/tools/chinese-conv.php      > $n_path/$new.new 
+  		rm -f $n_path/$old
+ 		
+  	  	mv $n_path/$new.new   $n_path/$new
+        done	
+
+}	
+
+function dr() {
+#一定要加入  local ，否則會成全域變數
+local ni 
+for i in $* ; do
+        ni=$i
+ 	#判斷為目錄再進入
+	if [ -d $i ]   ; then
+	   
+ 	   fn_list=`ls -d $i/*`
+	   dr  $fn_list  
+	   #ren $ni
+  	fi
+  	
+	if [ -e $ni ] ; then 
+	   ren $ni 
+ 	fi
+done
+
+}
+
+IFS=$'\n'
+for FILENAME in $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS
+do
+       dr  $FILENAME  
+done 
+
